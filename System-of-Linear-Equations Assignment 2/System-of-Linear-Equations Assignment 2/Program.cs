@@ -46,7 +46,7 @@ namespace System_of_Linear_Equations_Assignment_2
                     equations.Add(coefficients);
                 }
 
-                for (char c = 'A'; c <= 'E'; c++)
+                for (char c = 'A'; c <= 'G'; c++)
                 {
                     if (c == 'B')
                     {
@@ -76,12 +76,26 @@ namespace System_of_Linear_Equations_Assignment_2
                         stopwatch.Stop();
                         Console.WriteLine($"Execution Time for Parallel.ForEach Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
                     }
+                    else if (c == 'F')
+                    {
+                        var stopwatch = Stopwatch.StartNew();
+                        ImplicitTaskParallel(equations);
+                        stopwatch.Stop();
+                        Console.WriteLine($"Execution Time for Implicit Task Parallel Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
+                    }
+                    else if (c == 'G')
+                    {
+                        //var stopwatch = Stopwatch.StartNew();
+                        ////ExplicitTaskParallel(equations);
+                        //stopwatch.Stop();
+                        //Console.WriteLine($"Execution Time for Explicit Task Parallel Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
+                    }
                     else
                     {
                         var stopwatch = Stopwatch.StartNew();
                         SingleThreadedApplication(equations);
                         stopwatch.Stop();
-                        Console.WriteLine($"Execution Time for Single-Threaded Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
+                        Console.WriteLine($"Execution Time for Single-Threaded Application Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
                     }
                 }
             }
@@ -154,6 +168,51 @@ namespace System_of_Linear_Equations_Assignment_2
                 SolveLinearEquation(equ, sysNum++);
             });
         }
+        static void ImplicitTaskParallel(List<double[,]> equations)
+        {
+            Task[] tasks = new Task[equations.Count];
+            for (int i = 0; i < equations.Count; i++)
+            {
+                int sysNum = i + 1;
+                tasks[i] = Task.Run(() => SolveLinearEquation(equations[i], sysNum));
+            }
+            Task.WaitAll(tasks);
+        }
+
+        //static void ExplicitTaskParallel(List<double[,]> equations)
+        //{
+        //    List<Task> tasks = new List<Task>();
+        //    for (int i = 0; i < equations.Count; i++)
+        //    {
+        //        int sysNum = i + 1;
+        //        tasks.Add(Task.Factory.StartNew(() => SolveLinearEquation(equations[i], sysNum)));
+        //    }
+        //    Task.WaitAll(tasks.ToArray());
+        //}
+
+        //static void ImplicitTaskParallel(List<double[,]> equations)
+        //{
+
+        //    List<Task> tasks = new List<Task>();
+        //    for (int i = 0; i < equations.Count; i++)
+        //    {
+        //        int sysNum = i + 1;
+        //        tasks.Add(Task.Run(() => SolveLinearEquation(equations[i], sysNum)));
+        //    }
+        //    Task.WaitAll(tasks.ToArray());
+        //}
+
+        //static void ExplicitTaskParallel(List<double[,]> equations)
+        //{
+        //    List<Task> tasks = new List<Task>();
+        //    for (int i = 0; i < equations.Count; i++)
+        //    {
+        //        int sysNum = i + 1;
+        //        tasks.Add(Task.Factory.StartNew(() => SolveLinearEquation(equations[i], sysNum)));
+        //    }
+        //    Task.WaitAll(tasks.ToArray());
+        //}
+
 
         static void SolveLinearEquation(double[,] coefficients, int sysNum)
         {
