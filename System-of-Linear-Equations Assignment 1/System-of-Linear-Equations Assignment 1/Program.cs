@@ -13,15 +13,10 @@ class LinearEquationSolver
 
         if (File.Exists(filePath))
         {
-            Console.WriteLine("\nHow do you want to execute Application? \na. Single Threaded \nb. Multi-Threaded \nc. ThreadPool");
-            char choice = char.Parse(Console.ReadLine().ToUpper());
-
+           
             string[] lines = File.ReadAllLines(filePath);
 
             int numSystems = int.Parse(lines[0]);
-
-
-            
 
             int lineIndex = 1;
             List<double[,]> equiations = new List<double[,]>();
