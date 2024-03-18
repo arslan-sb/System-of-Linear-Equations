@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.IO;
+using System.Diagnostics;
 
 class LinearEquationSolver
 {
@@ -34,7 +35,7 @@ class LinearEquationSolver
                     for (int j = 0; j <= N; j++)
                     {
                         coefficients[i, j] = double.Parse(values[j]);
-                        //Console.WriteLine(coefficients[i, j]);
+                        Console.WriteLine(coefficients[i, j]);
                     }
                     lineIndex++;
                 }
@@ -43,20 +44,27 @@ class LinearEquationSolver
 
                 Console.WriteLine("\nHow do you want to execute Application? \na. Single Threaded \nb. Multi-Threaded \nc. ThreadPool");
                 char choice = char.Parse(Console.ReadLine().ToUpper());
+                
                 double[] result;
                 if (choice == 'B')
                 {
+                    var stopwatchSingleThread = Stopwatch.StartNew();
                     result = SolveLinearEquationsWithThreads(coefficients, iterations);
+                    stopwatchSingleThread.Stop();
+                    Console.WriteLine($"Execution Time for MultiThreaded: { stopwatchSingleThread.Elapsed}");
 
                 }
                 else if (choice == 'C')
                 {
+                    var stopwatchSingleThread = Stopwatch.StartNew();
                     result = SolveLinearEquationsWithThreadPools(coefficients, iterations);
+                    Console.WriteLine($"Execution Time for MultiThreaded: { stopwatchSingleThread.Elapsed}");
                 }
                 else
                 {
+                    var stopwatchSingleThread = Stopwatch.StartNew();
                     result = SolveLinearEquations(coefficients, iterations);
-
+                    Console.WriteLine($"Execution Time for MultiThreaded: { stopwatchSingleThread.Elapsed}");
                 }
                 Console.WriteLine($"Solution for system {systemNumber}:");
                 PrintSolution(result);
