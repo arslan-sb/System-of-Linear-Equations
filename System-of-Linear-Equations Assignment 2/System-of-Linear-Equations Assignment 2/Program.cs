@@ -85,10 +85,10 @@ namespace System_of_Linear_Equations_Assignment_2
                     }
                     else if (c == 'G')
                     {
-                        //var stopwatch = Stopwatch.StartNew();
-                        ////ExplicitTaskParallel(equations);
-                        //stopwatch.Stop();
-                        //Console.WriteLine($"Execution Time for Explicit Task Parallel Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
+                        var stopwatch = Stopwatch.StartNew();
+                        ExplicitTaskParallel(equations);
+                        stopwatch.Stop();
+                        Console.WriteLine($"Execution Time for Explicit Task Parallel Application: {stopwatch.ElapsedMilliseconds} Milliseconds");
                     }
                     else
                     {
@@ -168,50 +168,43 @@ namespace System_of_Linear_Equations_Assignment_2
                 SolveLinearEquation(equ, sysNum++);
             });
         }
+
         static void ImplicitTaskParallel(List<double[,]> equations)
+        {
+            Action[] actions = new Action[equations.Count];
+            for (int i = 0; i < equations.Count; i++)
+            {
+                int sysNum = i + 1;
+                int equationIndex = i; // Capture the current value of i
+                actions[i] = () =>
+                {
+                    SolveLinearEquation(equations[equationIndex], sysNum); // Use the captured equationIndex
+                };
+            }
+
+            Parallel.Invoke(actions);
+        }
+
+
+        static void ExplicitTaskParallel(List<double[,]> equations)
         {
             Task[] tasks = new Task[equations.Count];
             for (int i = 0; i < equations.Count; i++)
             {
                 int sysNum = i + 1;
-                tasks[i] = Task.Run(() => SolveLinearEquation(equations[i], sysNum));
+                int equationIndex = i; // Capture the current value of i
+                tasks[i] = Task.Run(() =>
+                {
+                    SolveLinearEquation(equations[equationIndex], sysNum); // Use the captured equationIndex
+                });
             }
+
             Task.WaitAll(tasks);
         }
 
-        //static void ExplicitTaskParallel(List<double[,]> equations)
-        //{
-        //    List<Task> tasks = new List<Task>();
-        //    for (int i = 0; i < equations.Count; i++)
-        //    {
-        //        int sysNum = i + 1;
-        //        tasks.Add(Task.Factory.StartNew(() => SolveLinearEquation(equations[i], sysNum)));
-        //    }
-        //    Task.WaitAll(tasks.ToArray());
-        //}
 
-        //static void ImplicitTaskParallel(List<double[,]> equations)
-        //{
 
-        //    List<Task> tasks = new List<Task>();
-        //    for (int i = 0; i < equations.Count; i++)
-        //    {
-        //        int sysNum = i + 1;
-        //        tasks.Add(Task.Run(() => SolveLinearEquation(equations[i], sysNum)));
-        //    }
-        //    Task.WaitAll(tasks.ToArray());
-        //}
 
-        //static void ExplicitTaskParallel(List<double[,]> equations)
-        //{
-        //    List<Task> tasks = new List<Task>();
-        //    for (int i = 0; i < equations.Count; i++)
-        //    {
-        //        int sysNum = i + 1;
-        //        tasks.Add(Task.Factory.StartNew(() => SolveLinearEquation(equations[i], sysNum)));
-        //    }
-        //    Task.WaitAll(tasks.ToArray());
-        //}
 
 
         static void SolveLinearEquation(double[,] coefficients, int sysNum)
