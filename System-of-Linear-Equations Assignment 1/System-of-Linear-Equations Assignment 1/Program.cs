@@ -27,7 +27,6 @@ class LinearEquationSolver
             List<double[,]> equiations = new List<double[,]>();
             for (int systemNumber = 1; systemNumber <= numSystems; systemNumber++)
             {
-                //Console.WriteLine($"Solving system {systemNumber}...");
 
                 int N = int.Parse(lines[lineIndex]);
                 lineIndex++;
@@ -46,25 +45,38 @@ class LinearEquationSolver
                 }
                 equiations.Add(coefficients);
             }
-            var stopwatch = Stopwatch.StartNew();
-            if (choice == 'B')
-            {
-                MultiThreadedApplication(equiations);
 
-            }
-            else if (choice == 'C')
+            for(char c = 'A'; c <= 'C'; c++)
             {
-                ThreadPooledApplication(equiations);
+                
+
+                if (c == 'B')
+                {
+                    var stopwatch = Stopwatch.StartNew();
+                    MultiThreadedApplication(equiations);
+                    stopwatch.Stop();
+                    Console.WriteLine($"Execution Time for Multi-Threaded Application: {stopwatch.ElapsedMilliseconds.ToString()}  Milliseconds");
+                }
+                else if (c== 'C')
+                {
+                    var stopwatch = Stopwatch.StartNew();
+                    ThreadPooledApplication(equiations);
+                    stopwatch.Stop();
+                    Console.WriteLine($"Execution Time for ThreadPool Application: {stopwatch.ElapsedMilliseconds.ToString()} Milliseconds");
+                }
+                else
+                {
+                    var stopwatch = Stopwatch.StartNew();
+                    SingleThreadedApplication(equiations);
+                    stopwatch.Stop();
+                    Console.WriteLine($"Execution Time for Single-Threaded Application: {stopwatch.ElapsedMilliseconds.ToString()} Milliseconds");
+                }
                 
             }
-            else
-            {
-                SingleThreadedApplication(equiations);
+            
+            
 
-            }
-
-            stopwatch.Stop();
-            Console.WriteLine($"Execution Time: {stopwatch.Elapsed}");
+            
         }
         else
         {
@@ -149,16 +161,17 @@ class LinearEquationSolver
             }
             solutions[i] = (coefficients[i, n] - sum) / coefficients[i, i];
         }
-        //Console.WriteLine($"Solution for system {sysNum}:");
-        //PrintSolution(solutions);
+        
+        //PrintSolution(solutions,sysNum);
     }
 
-    static void PrintSolution(double[] solution)
+    
+    static void PrintSolution(double[] result,int sysNum)
     {
-        foreach (var value in solution)
+        Console.WriteLine($"\nSolution for system {sysNum}:");
+        for (int i = 0; i < result.Length; i++)
         {
-            Console.Write($"{value} ");
+            Console.WriteLine($"x{i + 1} = {result[i]}");
         }
-        Console.WriteLine();
     }
 }

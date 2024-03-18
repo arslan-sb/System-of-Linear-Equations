@@ -11,26 +11,22 @@
 //        Console.WriteLine("Enter the path of the file:");
 //        string filePath = Console.ReadLine();
 
-
-
 //        if (File.Exists(filePath))
 //        {
 //            Console.WriteLine("\nHow do you want to execute Application? \na. Single Threaded \nb. Multi-Threaded \nc. ThreadPool");
 //            char choice = char.Parse(Console.ReadLine().ToUpper());
-//            var stopwatchSingleThread = Stopwatch.StartNew();
+
 //            string[] lines = File.ReadAllLines(filePath);
 
 //            int numSystems = int.Parse(lines[0]);
 
-//            List<Thread> threads = new List<Thread>();
-//            ManualResetEvent[] waitHandles = null;
-//            int numThreadPoolSystems = 0;
+
+
 
 //            int lineIndex = 1;
-
+//            List<double[,]> equiations = new List<double[,]>();
 //            for (int systemNumber = 1; systemNumber <= numSystems; systemNumber++)
 //            {
-//                Console.WriteLine($"Solving system {systemNumber}...");
 
 //                int N = int.Parse(lines[lineIndex]);
 //                lineIndex++;
@@ -43,74 +39,102 @@
 //                    for (int j = 0; j <= N; j++)
 //                    {
 //                        coefficients[i, j] = double.Parse(values[j]);
-//                        if (j == N)
-//                        {
-//                            Console.Write($"={coefficients[i, j]}\n");
-//                        }
-//                        else
-//                        {
-//                            Console.Write($"{coefficients[i, j]}x[{j + 1}]+");
-//                        }
 //                    }
 
 //                    lineIndex++;
 //                }
+//                equiations.Add(coefficients);
+//            }
+
+//            for (char c = 'A'; c <= 'C'; c++)
+//            {
+
 
 //                if (choice == 'B')
 //                {
-//                    Thread thread = new Thread(() => SolveLinearEquation(coefficients, systemNumber));
-//                    threads.Add(thread);
-//                    thread.Start();
-
+//                    var stopwatch = Stopwatch.StartNew();
+//                    MultiThreadedApplication(equiations);
+//                    stopwatch.Stop();
+//                    Console.WriteLine($"Execution Time for Multi-Threaded Application: {stopwatch.Elapsed}");
 //                }
 //                else if (choice == 'C')
 //                {
-//                    waitHandles = new ManualResetEvent[] { new ManualResetEvent(false) };
-
-//                    Interlocked.Increment(ref numThreadPoolSystems);
-//                    ThreadPool.QueueUserWorkItem(state =>
-//                    {
-//                        SolveLinearEquation(coefficients, systemNumber);
-//                        if (Interlocked.Decrement(ref numThreadPoolSystems) == 0)
-//                            waitHandles[0].Set();
-//                    });
+//                    var stopwatch = Stopwatch.StartNew();
+//                    ThreadPooledApplication(equiations);
+//                    stopwatch.Stop();
+//                    Console.WriteLine($"Execution Time for ThreadPool Application: {stopwatch.Elapsed}");
 //                }
 //                else
 //                {
-//                    SolveLinearEquation(coefficients, systemNumber);
-
+//                    var stopwatch = Stopwatch.StartNew();
+//                    SingleThreadedApplication(equiations);
+//                    stopwatch.Stop();
+//                    Console.WriteLine($"Execution Time for Single-Threaded Application: {stopwatch.Elapsed}");
 //                }
 
-
 //            }
 
-//            // Join all threads if multi-threaded option is chosen
-//            if (choice == 'B')
-//            {
-//                foreach (var thread in threads)
-//                {
-//                    thread.Join();
-//                }
-//            }
-//            else if (choice == 'C')
-//            {
-//                waitHandles = new ManualResetEvent[] { new ManualResetEvent(false) };
-//                WaitHandle.WaitAll(waitHandles);
-//            }
 
-//            stopwatchSingleThread.Stop();
-//            Console.WriteLine($"Execution Time: { stopwatchSingleThread.Elapsed}");
+
+
 //        }
 //        else
 //        {
 //            Console.WriteLine("File not found.");
 //        }
+//    }
 
+//    static void MultiThreadedApplication(List<double[,]> equiations)
+//    {
+//        List<Thread> threads = new List<Thread>();
+//        int sysNum = 1;
+//        foreach (var equ in equiations)
+//        {
+//            Thread thread = new Thread(() => SolveLinearEquation(equ, sysNum));
+//            threads.Add(thread);
+//            thread.Start();
+//            sysNum++;
+//        }
+//        foreach (var thread in threads)
+//        {
+//            thread.Join();
+//        }
 
 //    }
-//    static void SolveLinearEquation(double[,] coefficients, int systemNumber)
-//    {
 
+//    static void SingleThreadedApplication(List<double[,]> equiations)
+//    {
+//        int sysNum = 1;
+//        foreach (var equ in equiations)
+//        {
+//            SolveLinearEquation(equ, sysNum);
+//            sysNum++;
+//        }
+//    }
+
+//    static void ThreadPooledApplication(List<double[,]> equiations)
+//    {
+//        ManualResetEvent[] waitHandles = null;
+//        int numThreadPoolSystems = 0;
+//        int sysNum = 1;
+//        foreach (var equ in equiations)
+//        {
+//            Interlocked.Increment(ref numThreadPoolSystems);
+//            ThreadPool.QueueUserWorkItem(state =>
+//            {
+//                SolveLinearEquation(equ, sysNum);
+//                sysNum++;
+//                if (Interlocked.Decrement(ref numThreadPoolSystems) == 0)
+//                    waitHandles[0].Set();
+//            });
+//        }
+//        waitHandles = new ManualResetEvent[] { new ManualResetEvent(false) };
+//        WaitHandle.WaitAll(waitHandles);
+
+//    }
+
+//    static void SolveLinearEquation(double[,] coefficients, int sysNum)
+//    {
 //        int n = coefficients.GetLength(0);
 
 //        // Perform Gaussian Elimination
@@ -137,17 +161,14 @@
 //            }
 //            solutions[i] = (coefficients[i, n] - sum) / coefficients[i, i];
 //        }
-//        Console.WriteLine($"Solution for system {systemNumber}:");
-//        PrintSolution(solutions);
 
+//        //PrintSolution(solutions,sysNum);
 //    }
 
 
-
-
-//    static void PrintSolution(double[] result)
+//    static void PrintSolution(double[] result, int sysNum)
 //    {
-//        Console.WriteLine("\nSolution:");
+//        Console.WriteLine($"\nSolution for system {sysNum}:");
 //        for (int i = 0; i < result.Length; i++)
 //        {
 //            Console.WriteLine($"x{i + 1} = {result[i]}");
