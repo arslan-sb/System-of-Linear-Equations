@@ -1,0 +1,7 @@
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\bin\Debug\System-of-Linear-Equations Assignment 2.exe.config
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\bin\Debug\System-of-Linear-Equations Assignment 2.exe
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\bin\Debug\System-of-Linear-Equations Assignment 2.pdb
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\obj\Debug\System-of-Linear-Equations Assignment 2.csproj.AssemblyReference.cache
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\obj\Debug\System-of-Linear-Equations Assignment 2.csproj.CoreCompileInputs.cache
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\obj\Debug\System-of-Linear-Equations Assignment 2.exe
+F:\PDC\System-of-Linear-Equations\System-of-Linear-Equations Assignment 2\System-of-Linear-Equations Assignment 2\obj\Debug\System-of-Linear-Equations Assignment 2.pdb
