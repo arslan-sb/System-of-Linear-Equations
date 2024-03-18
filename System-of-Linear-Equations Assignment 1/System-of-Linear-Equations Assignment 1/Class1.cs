@@ -7,7 +7,6 @@ class LinearEquationSolver
 {
     static void Main()
     {
-
         Console.WriteLine("Enter the path of the file:");
         string filePath = Console.ReadLine();
         Console.WriteLine(filePath);
@@ -112,7 +111,10 @@ class LinearEquationSolver
         //}
         //PrintSolution(result);
     }
+    //static double LinearEquationSolver(double[,])
+    //{
 
+    //}
     static double[] SolveLinearEquationss(double[,] coefficients, int iterations, double tolerance)
     {
         int N = coefficients.GetLength(0);
